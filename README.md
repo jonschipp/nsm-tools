@@ -44,3 +44,8 @@ Try it manually
 ./hash_lookup.sh $(grep syscheck /var/ossec/logs/active-responses.log | tail -n 1 | cut -d " " -f9-)
 No match found
 ```
+
+### OSSEC Virus Totol Lookup
+
+Same as above but for Virus Total. It's a wrapper for `virus_total.py`.
+Place them both in `$OSSEC/active-response/bin` and update the configs in the example above.
