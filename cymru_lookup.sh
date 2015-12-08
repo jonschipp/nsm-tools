@@ -2,9 +2,9 @@
 # Author: Jon Schipp
 CHAT=/usr/local/bin/ircsay
 PROG=OSSEC
-SCRIPT=hash_lookup
+SCRIPT=$0
 CHANNEL="#ossec-syscheck"
-MAIL=jschipp@illinois.edu
+MAIL=you@org
 ACTION=$1
 USER=$2
 IP=$3
