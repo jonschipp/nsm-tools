@@ -27,7 +27,7 @@ cd $LOCAL
 cd ../
 PWD=$(pwd)
 CHAT="$PWD/bin/syscheck2chat.sh"
-CYMRU="$PWD/bin/cymru_lookup.sh"
+CYMRU="$PWD/bin/ossec_cymru_lookup.sh"
 VT="$PWD/bin/virustotal_lookup.sh"
 
 echo "$(date) $0 $1 $2 $3 $4 $5 $6 $7 $8" >> ${PWD}/../logs/active-responses.log

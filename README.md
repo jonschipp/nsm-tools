@@ -28,7 +28,7 @@ Place script in `$OSSEC/active-response/bin/`.
 ```
   <command>
     <name>cymru_lookup</name>
-    <executable>cymru_lookup</executable>
+    <executable>ossec_cymru_lookup.sh</executable>
     <expect></expect>
   </command>
 
@@ -41,7 +41,7 @@ Place script in `$OSSEC/active-response/bin/`.
 
 Try it manually
 ```
-./ossec-cymru-lookup.sh $(grep syscheck /var/ossec/logs/active-responses.log | tail -n 1 | cut -d " " -f9-)
+./ossec_cymru_lookup.sh $(grep syscheck /var/ossec/logs/active-responses.log | tail -n 1 | cut -d " " -f9-)
 No match found
 ```
 
