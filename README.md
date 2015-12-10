@@ -41,7 +41,7 @@ Place script in `$OSSEC/active-response/bin/`.
 
 Try it manually
 ```
-./hash_lookup.sh $(grep syscheck /var/ossec/logs/active-responses.log | tail -n 1 | cut -d " " -f9-)
+./ossec-cymru-lookup.sh $(grep syscheck /var/ossec/logs/active-responses.log | tail -n 1 | cut -d " " -f9-)
 No match found
 ```
 
