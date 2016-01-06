@@ -4,10 +4,11 @@ import urllib
 import urllib2
 import sys
 
-apikey = ''
+apikey = '843fa2012b619be746ead785b933d59820a2e357c7c186e581e8fcadbe2e550e'
 
 def usage():
   print '''Submit hash to virtus-total
+(Place your VirusTotal apikey in this script)
 Usage: %s <hash>''' % sys.argv[0]
   exit(0)
 
@@ -18,7 +19,8 @@ def collect(data):
   first_seen           = retrieve['first-seen']
   last_seen            = retrieve['last-seen']
   last_scan_permalink  = retrieve['last-scan-permalink']
-  return sha1, filenames, first_seen, last_seen, last_scan_permalink
+  last_scan_report     = retrieve['last-scan-report']
+  return sha1, filenames, first_seen, last_seen, last_scan_permalink, last_scan_report
 
 def msg(sha1, filenames, first_seen, last_seen, last_scan_permalink):
   print '''===Suspected Malware Item===
@@ -27,6 +29,12 @@ def msg(sha1, filenames, first_seen, last_seen, last_scan_permalink):
   First Seen: %s
   Last Seen: %s
   Link: %s''' % (sha1, filenames, first_seen, last_seen, last_scan_permalink)
+
+def is_malware(last_scan_report):
+  for av, scan in last_scan_report.iteritems():
+    if scan[0] is not None:
+      return True
+  return False
 
 def in_database(data, mhash):
   result = data[0]['result']
@@ -64,6 +72,10 @@ if not in_database(data, mhash):
   exit(1)
 
 # Positive match found
-sha1, filenames, first_seen, last_seen, last_scan_permalink = collect(data)
-msg(sha1, filenames, first_seen, last_seen, last_scan_permalink)
-exit(1)
+sha1, filenames, first_seen, last_seen, last_scan_permalink, last_scan_report = collect(data)
+if is_malware(last_scan_report):
+  msg(sha1, filenames, first_seen, last_seen, last_scan_permalink)
+  exit(0)
+else:
+  print 'Entry %s is not malicious' % mhash
+  exit(1)
