@@ -10,7 +10,7 @@ def usage():
   print '''Submit hash to virtus-total
 (Place your VirusTotal apikey in this script)
 Usage: %s <hash>''' % sys.argv[0]
-  exit(0)
+  exit(1)
 
 def collect(data):
   retrieve             = data[0]
