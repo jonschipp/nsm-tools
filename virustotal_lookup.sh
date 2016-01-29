@@ -3,6 +3,7 @@
 PRE="$(date +"%Y-%m-%dT%T.%6N%:z") $(hostname -s) $(basename $0):"
 LOG="../logs/virustotal_lookup.log"
 AR_LOG="${PWD}/../logs/active-responses.log"
+CDB="/var/ossec/lists/hashes.list"
 ACTION=$1
 USER=$2
 IP=$3
@@ -80,6 +81,24 @@ is_executable(){
   return 0
 }
 
+send_cdb(){
+  local checksum
+  local file
+  checksum="$1"
+  file="$2"
+  if [[ -w "$CDB" ]]; then
+    printf "${checksum}:${file:-empty}\n" >> $CDB
+  fi
+}
+
+check_cdb(){
+  local checksum
+  checksum="$1"
+  if [[ -r "$CDB" ]]; then
+    grep -q "$checksum" $CDB && exit 0
+  fi
+}
+
 # Check for arguments
 check_args $#
 
@@ -105,8 +124,11 @@ is_executable "$FILENAME" || die "OK: ${FILENAME:-(empty)} is not an executable 
 # Verify we do indeed have a hash
 is_hash "$HASH"
 
+# Check if we've looked up this hash previously
+check_cdb "$HASH"
+
 # Lookup
-RESULTS=$(virus_lookup $HASH) || die "OK: No malware found for ${FILENAME:-(empty)} ${HASH:-(empty)} on ${AGENT:-(empty)}"
+RESULTS=$(virus_lookup $HASH) || { send_cdb "$HASH" "$FILENAME" && die "OK: No malware found for ${FILENAME:-(empty)} ${HASH:-(empty)} on ${AGENT:-(empty)}"; }
 
 # Log
 log "Malicious hash found for ${FILENAME:-(empty)} ($HASH) on ${AGENT:-(empty)}"
